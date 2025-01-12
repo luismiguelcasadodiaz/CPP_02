@@ -282,6 +282,48 @@ $ echo "obase=2 ;8388607.99609375" |bc
 
 ```
 
+## How my class works
+
+#### Constructors
+The int constructor shifts 8 bits to the left its parameter n.
+
+```c++
+
+	this->setRawBits(n << Fixed::_fracbits);
+```
+
+The float contructor, **must not** shift 8 bits to the *left*. In fact the compiler claims if you try. 
+
+You can not shift a Floating point. The exponent and mantissa corrupt it you do it.
+```bash
+Fixed.class.cpp:57:60: error: invalid operands of types ‘const float’ and ‘const int’ to binary ‘operator<<’
+   57 |                 this->_N = static_cast<int>( roundf(value  <<  _fracbits));
+      |                                                     ~~~~~  ^~  ~~~~~~~~~
+      |                                                     |          |
+      |                                                     |          const int
+      |                                                     const float
+```
+
+This is why instead of shifting i **multiply** the float value by two power of 8.
+roundf() returns a float with the argument's closest integer, whose result i 
+cast to int to fit the setter signature.
+
+```c++
+	this->setRawBits(static_cast<int>(roundf(value * (1 <<  _fracbits))i));
+
+```
+#### Recovering the values
+In the opposite way, to translate the class's internal representation to an integer it is a straight 8 bits *right* shift.
+
+But the translation to float, first cast to float the internal representation that it is **divided** by two power of 8.
+
+#### Aritmetic
+I execute aritmetic operation with the float version of the internal representation.
+
+```c++
+	return (this->toFloat() + other.toFloat());
+
+```
 # what I read
 + [Understanding and Using Floating Point Numbers](https://www.cprogramming.com/tutorial/floating_point/understanding_floating_point.html)
 + [Floating point number representation](https://www.cprogramming.com/tutorial/floating_point/understanding_floating_point_representation.html)
