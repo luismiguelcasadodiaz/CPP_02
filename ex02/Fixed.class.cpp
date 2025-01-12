@@ -5,12 +5,15 @@ const int Fixed::_MIN_INT_FIXED = -8388607;
 const int Fixed::_MAX_INT_FIXED = 8388607;
 const float Fixed::_MIN_FLT_FIXED = -8388607.99609375f;
 const float Fixed::_MAX_FLT_FIXED = 8388607.99609375f;
+const float Fixed::_EPSILON_PLUS = 0.99609375f;
+const float Fixed::_EPSILON_MINUS = -0.99609375f;
 
 
 
 Fixed::Fixed( void ) //constructor by default
 {
 	std::cout << "Default constructor called for Fixed " << std::endl;
+	this->setRawBits( 0 );
 	return ;
 }
 
@@ -41,34 +44,13 @@ Fixed::~Fixed( void ) // destructor
 Fixed::Fixed( int const n ) //constructor for integer
 {
 	std::cout << "Int constructor called for Fixed " << std::endl;
-	
-	if (Fixed::_MIN_INT_FIXED <= n && n <= Fixed::_MAX_INT_FIXED) {
-		int aux = n;
-		for (int i=1; i < Fixed::_fracbits; i++)
-			aux *=2 ;
-		this->setRawBits(aux);
-	}
-	else {
-		std::cout << ">>>>>Overflow: "<< n << " is not in Fixed class range" << std::endl;
-		this->setRawBits( 0 );
-	}
-	return ;
+	this->setRawBits(n << Fixed::_fracbits);
 }
 
 Fixed::Fixed( float const f ) //constructor for float
 {
 	std::cout << "Float constructor called for Fixed " << std::endl;
-
-	if (Fixed::_MIN_FLT_FIXED <= f && f <= Fixed::_MAX_FLT_FIXED) {
-		float frac = f;
-		for (int i=1; i < Fixed::_fracbits; i++)
-			frac *=2 ;
-		this->setRawBits(static_cast<int>(roundf(frac)));
-	}
-	else {
-		std::cout << ">>>>>>Overflow: "<< f << " is not in Fixed class range" << std::endl;
-		this->setRawBits( 0 );
-	}
+	this->setRawBits(static_cast<int>(roundf(f * (1 <<  _fracbits))));
 }
 //Fixed::Fixed(${ARGS_LIST});
 
@@ -81,31 +63,137 @@ int Fixed::getRawBits( void ) const
 // Setters
 void Fixed::setRawBits( int const raw)
 {
-	this->_N = raw;
+	if ((Fixed::_MIN_INT_FIXED << Fixed::_fracbits) <= raw && raw <= (Fixed::_MAX_INT_FIXED << Fixed::_fracbits))
+		this->_N = raw;
+	else {
+		std::cout << ">>>>>Overflow: "<< raw << " is not in Fixed class range" << std::endl;
+		this->_N = 0;
+	}
+	return ;
+}
+    
+// aritmetic operators
+Fixed Fixed::operator+(const Fixed & other){
+	bool overflow = true;
+	if ((this->toFloat() >= 0) && (_MAX_INT_FIXED - this->_N)  > other.getRawBits())
+		overflow = false;
+	if ((this->toFloat() < 0) && (_MIN_INT_FIXED - this->_N) < other.getRawBits())
+		overflow = false;
+	if (overflow) {
+		std::cout << "overflow ==> " << this->toInt() << " plus " ;
+		std::cout << other.toInt() << " does not fit in Fixed Class" << std::endl;
+		return this->toFloat();
+		}
+	return (this->toFloat() + other.toFloat());
+}
+
+Fixed Fixed::operator-(const Fixed & other){
+	if ((this->_N < 0) && (_MIN_INT_FIXED - this->_N) < other.getRawBits() ) {
+		std::cout << "overflow ==> " << this->toInt() << " minus " ;
+		std::cout << other.toInt() << " does not fit in Fixed Class" << std::endl;
+		return this->_N;
+	}
+	return (this->toFloat() - other.toFloat());
+}
+
+
+Fixed Fixed::operator*(const Fixed & other){
+	if (Fixed::_abs(Fixed::_MAX_INT_FIXED / this->toFloat()) < Fixed::_abs(other.toFloat())) {
+		std::cout << "overflow ==> " << this->toInt() << " multiplied by " ;
+		std::cout << other.toInt() << " does not fit in Fixed Class" << std::endl;
+		return this->_N;
+	}
+	return (this->toFloat() * other.toFloat());
+}
+
+Fixed Fixed::operator/(const Fixed & other){
+	float zero_check = other.toFloat() - 0;
+	float magnitud_check = (Fixed::_MAX_INT_FIXED * other.toFloat()) - this->toFloat();
+
+	if (Fixed::_EPSILON_MINUS <= zero_check  && zero_check  <= Fixed::_EPSILON_PLUS){
+		std::cout << "overflow ==> " << this->toInt() << " divided by " ;
+		std::cout << "zero does not fit in Fixed Class" << std::endl;
+		return this->_N;
+	}
+	else if (Fixed::_EPSILON_MINUS <= magnitud_check && magnitud_check <= Fixed::_EPSILON_PLUS){
+		std::cout << "overflow ==> " << this->toInt() << " divided by " ;
+		std::cout << other.toInt() << " does not fit in Fixed Class" << std::endl;
+		return this->_N;
+	}
+	return (this->toFloat() / other.toFloat());
+}
+
+
+// Comparison operators
+bool Fixed::operator>(const Fixed & other){
+	return (this->toFloat() > other.toFloat());
+}
+bool Fixed::operator<(const Fixed & other){
+	return (this->toFloat() < other.toFloat());
+}
+bool Fixed::operator>=(const Fixed & other){
+	return ((this->toFloat() > other.toFloat()) || ((Fixed::_EPSILON_MINUS <= (this->toFloat() - other.toFloat())) && ((this->toFloat() > other.toFloat()) <= Fixed::_EPSILON_PLUS)));
+}
+bool Fixed::operator<=(const Fixed & other){
+	return ((this->toFloat() < other.toFloat()) || ((Fixed::_EPSILON_MINUS <= (this->toFloat() - other.toFloat())) && ((this->toFloat() > other.toFloat()) <= Fixed::_EPSILON_PLUS)));
+}
+
+bool Fixed::operator==(const Fixed & other){
+	return (((Fixed::_EPSILON_MINUS <= (this->toFloat() - other.toFloat())) && ((this->toFloat() > other.toFloat()) <= Fixed::_EPSILON_PLUS)));
+}
+
+bool Fixed::operator!=(const Fixed & other){
+	return ((( (this->toFloat() - other.toFloat()) < Fixed::_EPSILON_MINUS ) || ( Fixed::_EPSILON_PLUS < (this->toFloat() > other.toFloat()))));
+}
+/*
+// increment-decrement operators
+Fixed & Fixed::operator++( void ){
+
 	return ;
 }
 
-// Comparison operators
+Fixed   Fixed::operator++( int n ){
+	return ;
+}
 
+*/
 // member functions
 int Fixed::toInt( void ) const
 {
-	int aux = this->getRawBits();
-	for (int i=1; i < Fixed::_fracbits; i++)
-		aux /=2 ;
-	return aux;
+	return ((int)(roundf((float)this->_N / (1 << this->_fracbits))));
 }
 
 float Fixed::toFloat( void ) const
 {
-	float aux = static_cast<float>(this->getRawBits());
-	for (int i=1; i < Fixed::_fracbits; i++)
-		aux /=2 ;
-	return aux;
+	return ((float)this->getRawBits() / (1 << Fixed::_fracbits));
+}
+/*
+	// class functions
+static Fixed Fixed::min(Fixed & a, Fixed & b){
+
+	return ;
+}
+static Fixed Fixed::min(Fixed const & a, Fixed const & b){
+
+	return ;
+}
+static Fixed Fixed::max(Fixed & a, Fixed & b){
+
+	return ;
+}
+static Fixed Fixed::max(Fixed const & a, Fixed const & b){
+
+	return ;
 }
 
-
+*/
 // Helper functions for canonicalization
+
+float Fixed::_abs(const float value) const{
+	if (value < 0)
+		return (-value);
+	return (value);
+}
 
 std::ostream& operator<<(std::ostream& os, const Fixed& obj)
 {

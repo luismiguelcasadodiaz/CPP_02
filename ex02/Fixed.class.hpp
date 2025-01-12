@@ -36,6 +36,7 @@ public:
     Fixed  operator-(const Fixed & other);
     Fixed  operator*(const Fixed & other);
     Fixed  operator/(const Fixed & other);
+    
     // Comparison operators
     bool  operator>(const Fixed & other);
     bool  operator<(const Fixed & other);
@@ -44,18 +45,21 @@ public:
     bool  operator==(const Fixed & other);
     bool  operator!=(const Fixed & other);
 	// increment-decrement operators
-	Fixed & operator++( void );
+	/*Fixed & operator++( void );
+	Fixed   operator++( int n );    
+*/
 
     // member functions
 	float toFloat ( void ) const;
 	int	toInt( void ) const;
 
 	// class functions
+    /*
 	static Fixed min(Fixed & a, Fixed & b);
 	static Fixed min(Fixed const & a, Fixed const & b);
 	static Fixed max(Fixed & a, Fixed & b);
 	static Fixed max(Fixed const & a, Fixed const & b);
-
+*/
 
 private:
 	int _N;
@@ -64,6 +68,9 @@ private:
     static const int _MAX_INT_FIXED;
     static const float _MIN_FLT_FIXED;
     static const float _MAX_FLT_FIXED;
+    static const float _EPSILON_PLUS;
+    static const float _EPSILON_MINUS;
+    float _abs(const float value) const;
 
 
     // Helper functions for canonicalization
