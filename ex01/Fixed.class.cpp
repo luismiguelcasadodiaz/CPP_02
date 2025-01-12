@@ -11,6 +11,7 @@ const float Fixed::_MAX_FLT_FIXED = 8388607.99609375f;
 Fixed::Fixed( void ) //constructor by default
 {
 	std::cout << "Default constructor called for Fixed " << std::endl;
+	this->setRawBits( 0 );
 	return ;
 }
 
@@ -28,7 +29,7 @@ Fixed &  Fixed::operator=(const Fixed & other)
 	{
 		this->_N = other.getRawBits();
 	}
-	return *this; 
+	return (*this); 
 }
 
 Fixed::~Fixed( void ) // destructor
@@ -41,34 +42,13 @@ Fixed::~Fixed( void ) // destructor
 Fixed::Fixed( int const n ) //constructor for integer
 {
 	std::cout << "Int constructor called for Fixed " << std::endl;
-	
-	if (Fixed::_MIN_INT_FIXED <= n && n <= Fixed::_MAX_INT_FIXED) {
-		int aux = n;
-		for (int i=1; i < Fixed::_fracbits; i++)
-			aux *=2 ;
-		this->setRawBits(aux);
-	}
-	else {
-		std::cout << ">>>>>Overflow: "<< n << " is not in Fixed class range" << std::endl;
-		this->setRawBits( 0 );
-	}
-	return ;
+	this->setRawBits(n << Fixed::_fracbits);
 }
 
-Fixed::Fixed( float const f ) //constructor for float
+Fixed::Fixed( const float value ) //constructor for float
 {
 	std::cout << "Float constructor called for Fixed " << std::endl;
-
-	if (Fixed::_MIN_FLT_FIXED <= f && f <= Fixed::_MAX_FLT_FIXED) {
-		float frac = f;
-		for (int i=1; i < Fixed::_fracbits; i++)
-			frac *=2 ;
-		this->setRawBits(static_cast<int>(roundf(frac)));
-	}
-	else {
-		std::cout << ">>>>>>Overflow: "<< f << " is not in Fixed class range" << std::endl;
-		this->setRawBits( 0 );
-	}
+	this->setRawBits(static_cast<int>(roundf(value * (1 <<  _fracbits))));
 }
 //Fixed::Fixed(${ARGS_LIST});
 
@@ -81,7 +61,12 @@ int Fixed::getRawBits( void ) const
 // Setters
 void Fixed::setRawBits( int const raw)
 {
-	this->_N = raw;
+	if (Fixed::_MIN_INT_FIXED <= raw && raw <= Fixed::_MAX_INT_FIXED)
+		this->_N = raw;
+	else {
+		std::cout << ">>>>>Overflow: "<< raw << " is not in Fixed class range" << std::endl;
+		this->_N = 0;
+	}
 	return ;
 }
 
@@ -90,18 +75,12 @@ void Fixed::setRawBits( int const raw)
 // member functions
 int Fixed::toInt( void ) const
 {
-	int aux = this->getRawBits();
-	for (int i=1; i < Fixed::_fracbits; i++)
-		aux /=2 ;
-	return aux;
+	return (this->getRawBits() >> Fixed::_fracbits);
 }
 
 float Fixed::toFloat( void ) const
 {
-	float aux = static_cast<float>(this->getRawBits());
-	for (int i=1; i < Fixed::_fracbits; i++)
-		aux /=2 ;
-	return aux;
+	return ((float)this->getRawBits() / (1 << Fixed::_fracbits));
 }
 
 

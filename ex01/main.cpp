@@ -69,5 +69,6 @@ int main( void )
 	a = Fixed( -8388607.99609375f);
 	std::cout << "-8388607.99609375f is " << a << std::endl;
 	std::cout << "-8388607.99609375f is " << a.toInt() << " as integer" << std::endl;
+	
 	return 0;
 }
