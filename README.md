@@ -294,7 +294,7 @@ The int constructor shifts 8 bits to the left its parameter n.
 
 The float contructor, **must not** shift 8 bits to the *left*. In fact the compiler claims if you try. 
 
-You can not shift a Floating point. The exponent and mantissa corrupt it you do it.
+You can not shift a Floating point. The exponent and mantissa corrupt if you do it.
 ```bash
 Fixed.class.cpp:57:60: error: invalid operands of types ‘const float’ and ‘const int’ to binary ‘operator<<’
    57 |                 this->_N = static_cast<int>( roundf(value  <<  _fracbits));
@@ -317,13 +317,17 @@ In the opposite way, to translate the class's internal representation to an inte
 
 But the translation to float, first cast to float the internal representation that it is **divided** by two power of 8.
 
-#### Aritmetic
-I execute aritmetic operation with the float version of the internal representation.
+#### Arithmetic
+I execute arithmetic operations with the float version of the internal representation.
 
 ```c++
 	return (this->toFloat() + other.toFloat());
-
 ```
+I check before if operation result will fit in Fixed Class.
+
+For a +  b,  i check If max - a < b to flag oveflow
+For a * b. I check if max/a 
+
 # what I read
 + [Understanding and Using Floating Point Numbers](https://www.cprogramming.com/tutorial/floating_point/understanding_floating_point.html)
 + [Floating point number representation](https://www.cprogramming.com/tutorial/floating_point/understanding_floating_point_representation.html)

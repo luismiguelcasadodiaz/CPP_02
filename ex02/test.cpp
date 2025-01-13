@@ -12,5 +12,7 @@ int main (void)
 	std::cout << f++ << std::endl;
 	std::cout << f << std::endl;
 	std::cout << --f << std::endl;
+	for (float  i = 1; i<= 2.0f; i= i + 0.1f)
+		std::cout << i <<std::endl;
 	return (0);
 }

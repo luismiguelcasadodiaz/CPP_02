@@ -9,7 +9,7 @@
     the least 8 significance bits are reserved for the fractional part.
     we have only 24 bits for the integer part.
 
-    the range of velues to represents fits inside
+    the range of values to represents fits inside
 
     _MIN_FIXED <= x <= _MAX_FIXED
 
@@ -44,10 +44,12 @@ public:
     bool  operator<=(const Fixed & other);
     bool  operator==(const Fixed & other);
     bool  operator!=(const Fixed & other);
-	// increment-decrement operators
+
+	// PRE increment-decrement operators
 	Fixed & operator++( void );
-	Fixed   operator++( int n );    
     Fixed & operator--( void );
+    // POST increment-decrement operators
+	Fixed   operator++( int n );    
 	Fixed   operator--( int n );    
 
 
