@@ -45,21 +45,23 @@ public:
     bool  operator==(const Fixed & other);
     bool  operator!=(const Fixed & other);
 	// increment-decrement operators
-	/*Fixed & operator++( void );
+	Fixed & operator++( void );
 	Fixed   operator++( int n );    
-*/
+    Fixed & operator--( void );
+	Fixed   operator--( int n );    
+
 
     // member functions
 	float toFloat ( void ) const;
 	int	toInt( void ) const;
 
 	// class functions
-    /*
+    
 	static Fixed min(Fixed & a, Fixed & b);
 	static Fixed min(Fixed const & a, Fixed const & b);
 	static Fixed max(Fixed & a, Fixed & b);
 	static Fixed max(Fixed const & a, Fixed const & b);
-*/
+
 
 private:
 	int _N;
