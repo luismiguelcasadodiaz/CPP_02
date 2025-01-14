@@ -13,6 +13,7 @@
 
 #include "Point.class.hpp"
 
+//bsp returns true if point d is inside the triangle abc
 bool bsp(Point const a, Point const b, Point const c, Point const d);
 
 int main( void)

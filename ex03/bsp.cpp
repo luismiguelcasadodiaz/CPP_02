@@ -11,6 +11,8 @@
 /* ************************************************************************** */
 
 #include "Point.class.hpp"
+//https://www.omnicalculator.com/es/matematicas/calculadora-del-area-de-un-triangulo-con-coordenadas
+//Please pay special attention to the factor order in the subtractions.
 static float area(Point const a, Point const b, Point const c)
 {
 	float one = Fixed(a.getx() * (b.gety()- c.gety())).toFloat();
@@ -21,7 +23,7 @@ static float area(Point const a, Point const b, Point const c)
         return (tot/ 2.0f);
     return (-tot/ 2.0f);
 }
-
+//I return at >= a1 + a2 + a3 instead at == a1 + a2 + a3 cause the FIxed class precision is not the best one.
 bool bsp(Point const a, Point const b, Point const c, Point const d){
     float at = area(a, b, c);
     float a1 = area(d, b, c);
