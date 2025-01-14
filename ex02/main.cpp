@@ -6,7 +6,7 @@
 /*   By: luicasad <luicasad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 15:02:55 by luicasad          #+#    #+#             */
-/*   Updated: 2025/01/14 16:22:21 by luicasad         ###   ########.fr       */
+/*   Updated: 2025/01/14 16:27:43 by luicasad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "Fixed.class.hpp"
@@ -82,7 +82,7 @@ int main( void ) {
 	Fixed initi = Fixed(1.0000000f);
 	Fixed limit = Fixed(1.0002000f);
 	Fixed incre = Fixed(1.0000300f);
-	Fixed refer = Fixed(1.0001000f );
+	Fixed refer = Fixed(1.0001000f);
 	for (Fixed i = initi;i <=  limit;i++)
 	{
 		std::cout << i << "loop "<< idx++ << " i==ee " << refer << " = " << (i == refer) << std::endl;
