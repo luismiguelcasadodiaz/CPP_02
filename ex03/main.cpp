@@ -20,7 +20,7 @@ int main( void)
 
     Point aaa = Point( 2.0f, 1.0f );
     Point bbb = Point( 4.0f, 1.0f );
-    Point ccc = Point( 2.5f, 5.0f );
+    Point ccc = Point( 3.0f, 5.0f );
     Point yes = Point( 3.0f, 3.0f );
     Point noo = Point( 5.0f, 5.0f );
 
