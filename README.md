@@ -323,10 +323,55 @@ I execute arithmetic operations with the float version of the internal represent
 ```c++
 	return (this->toFloat() + other.toFloat());
 ```
-I check before if operation result will fit in Fixed Class.
 
-For a +  b,  i check If max - a < b to flag oveflow
-For a * b. I check if max/a 
+Each arithmetic operation has its own overflow operation:
+
+| Operation            | Condition                             | Flag          |
+|----------------------|---------------------------------------|---------------|
+| addition       a + b | if max - a < b                        |  overflow     |
+| substraction   a - b | if a < 0 and  min - a < b             |  overflow     |
+| multiplicacion a * b | if max / a < b                        |  overflow     |
+| division       a / b | if  (a < min * b)  or   (max * b < a) |  overflow     |
+
+#### Epsilon
+I use bc to calculate it
+
+```bash
+echo "ibase=2; .00000001" |bc
+.00390625
+```
+
+#### Fixed class inside a loop for
+
+I tested my Fixed Class wiht a loop in this way
+
+```c++
+   Fixed initi = Fixed(1.0000000f);
+	Fixed limit = Fixed(1.0390625f);
+	Fixed refer = Fixed(1.02f );
+	for (Fixed i = initi;i <=  limit;i++)
+	{
+		std::cout << i << " loop "<< idx++ << " i==ee " << refer << " = " << (i == refer) << std::endl;
+	}
+```
+
+i got ths results
+
+```bash
+1.00000loop 0 i==ee 1.01953 = 0
+1.00391loop 1 i==ee 1.01953 = 0
+1.00781loop 2 i==ee 1.01953 = 0
+1.01172loop 3 i==ee 1.01953 = 0
+1.01562loop 4 i==ee 1.01953 = 1
+1.01953loop 5 i==ee 1.01953 = 1
+1.02344loop 6 i==ee 1.01953 = 0
+1.02734loop 7 i==ee 1.01953 = 0
+1.03125loop 8 i==ee 1.01953 = 0
+1.03516loop 9 i==ee 1.01953 = 0
+1.03906loop 10 i==ee 1.01953 = 0
+1.04297loop 11 i==ee 1.01953 = 0
+
+```
 
 # what I read
 + [Understanding and Using Floating Point Numbers](https://www.cprogramming.com/tutorial/floating_point/understanding_floating_point.html)

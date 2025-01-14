@@ -6,7 +6,7 @@
 /*   By: luicasad <luicasad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 15:02:55 by luicasad          #+#    #+#             */
-/*   Updated: 2025/01/12 11:14:36 by luicasad         ###   ########.fr       */
+/*   Updated: 2025/01/14 16:22:21 by luicasad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "Fixed.class.hpp"
@@ -23,13 +23,9 @@ int main( void ) {
 	std::cout << a << std::endl;
 	std::cout << b << std::endl;
 	std::cout << Fixed::max( a, b ) << std::endl;
-
-	/*
 	
 	std::cout << "-------------------------- Aritmetic operations" << std::endl;
 	
-	Fixed a = Fixed( 5.7f );
-	Fixed b = Fixed( 2 );
 	Fixed c;
 
 	c = a;
@@ -87,7 +83,7 @@ int main( void ) {
 	Fixed limit = Fixed(1.0002000f);
 	Fixed incre = Fixed(1.0000300f);
 	Fixed refer = Fixed(1.0001000f );
-	for (Fixed i = initi;i <=  limit;i = i +  incre)
+	for (Fixed i = initi;i <=  limit;i++)
 	{
 		std::cout << i << "loop "<< idx++ << " i==ee " << refer << " = " << (i == refer) << std::endl;
 	}
@@ -115,12 +111,12 @@ int main( void ) {
 	std::cout << "aa=" << aa <<" ,aa++ ==> aa= "<< aa++  << std::endl;
 	std::cout << "aa=" << aa <<" ,aa++ ==> aa= "<< aa++  << std::endl;
 	std::cout << "aa=" << aa <<" ,aa++ ==> aa= "<< aa++  << std::endl;
-		std::cout << "aa=" << aa <<" ,aa++ ==> aa= "<< aa++  << std::endl;
-			std::cout << "aa=" << aa <<" ,aa++ ==> aa= "<< aa++  << std::endl;
-				std::cout << "aa=" << aa <<" ,aa++ ==> aa= "<< aa++  << std::endl;
+	std::cout << "aa=" << aa <<" ,aa++ ==> aa= "<< aa++  << std::endl;
+	std::cout << "aa=" << aa <<" ,aa++ ==> aa= "<< aa++  << std::endl;
+	std::cout << "aa=" << aa <<" ,aa++ ==> aa= "<< aa++  << std::endl;
 	std::cout << "aa=" << aa <<" ,--aa ==> aa= "<< --aa  << std::endl;
 	std::cout << "aa=" << aa <<" ,--aa ==> aa= "<< --aa  << std::endl;
 	std::cout << "aa=" << aa <<" ,--aa ==> aa= "<< --aa  << std::endl;
-	*/
+
 	return 0;
 }
