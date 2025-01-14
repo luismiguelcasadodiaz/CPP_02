@@ -5,8 +5,8 @@ const int Fixed::_MIN_INT_FIXED = -8388607;
 const int Fixed::_MAX_INT_FIXED = 8388607;
 const float Fixed::_MIN_FLT_FIXED = -8388607.99609375f;
 const float Fixed::_MAX_FLT_FIXED = 8388607.99609375f;
-const float Fixed::_EPSILON_PLUS =   0.00000005f;
-const float Fixed::_EPSILON_MINUS = -0.00000005f;
+const float Fixed::_EPSILON_PLUS =   0.00390625f;
+const float Fixed::_EPSILON_MINUS = -0.00390625f;
 
 
 
@@ -19,31 +19,31 @@ Fixed::Fixed( void ) //constructor by default
 
 Fixed::Fixed(const Fixed& other) //constructor by copy
 {
-	std::cout << "Copy constructor called for Fixed " << std::endl;
+	//std::cout << "Copy constructor called for Fixed " << std::endl;
 	*this = other;
 	return;
 }
 
 Fixed &  Fixed::operator=(const Fixed & other)
 {
-	std::cout << "Copy assignment operator called for Fixed " << std::endl;
+	//std::cout << "Copy assignment operator called for Fixed " << std::endl;
 	if (this != &other)
 	{
-		this->_N = other.getRawBits();
+		this->setRawBits(other.getRawBits());
 	}
 	return *this; 
 }
 
 Fixed::~Fixed( void ) // destructor
 {
-	std::cout << "Destructor called for Fixed " << std::endl;
+	//std::cout << "Destructor called for Fixed " << std::endl;
 	return ;
 }
 
 // Constructor(s)
 Fixed::Fixed( int const n ) //constructor for integer
 {
-	std::cout << "Int constructor called for Fixed " << std::endl;
+	//std::cout << "Int constructor called for Fixed " << std::endl;
 	if (Fixed::_MIN_INT_FIXED <= n && n <= Fixed::_MAX_INT_FIXED)
 		this->setRawBits(n << Fixed::_fracbits);
 	else {
@@ -54,7 +54,7 @@ Fixed::Fixed( int const n ) //constructor for integer
 
 Fixed::Fixed( float const f ) //constructor for float
 {
-	std::cout << "Float constructor called for Fixed " << std::endl;
+	//std::cout << "Float constructor called for Fixed " << std::endl;
 	if (Fixed::_MIN_FLT_FIXED <= f && f <= Fixed::_MAX_FLT_FIXED)
 		this->setRawBits(static_cast<int>(roundf(f * (1 <<  _fracbits))));
 	else {
@@ -80,9 +80,9 @@ void Fixed::setRawBits( int const raw)
 // aritmetic operators
 Fixed Fixed::operator+(const Fixed & other){
 	bool overflow = true;
-	if ((this->toFloat() >= 0) && (_MAX_INT_FIXED - this->_N)  > other.getRawBits())
+	if ((this->toFloat() >= 0) && (_MAX_INT_FIXED - this->toFloat())  > other.toFloat())
 		overflow = false;
-	if ((this->toFloat() < 0) && (_MIN_INT_FIXED - this->_N) < other.getRawBits())
+	if ((this->toFloat() < 0) && (_MIN_INT_FIXED - this->toFloat()) < other.toFloat())
 		overflow = false;
 	if (overflow) {
 		std::cout << "overflow ==> " << this->toInt() << " plus " ;
@@ -93,7 +93,7 @@ Fixed Fixed::operator+(const Fixed & other){
 }
 
 Fixed Fixed::operator-(const Fixed & other){
-	if ((this->_N < 0) && (_MIN_INT_FIXED - this->_N) < other.getRawBits() ) {
+	if ((this->toFloat() < 0) && (_MIN_INT_FIXED - this->toFloat()) < other.toFloat() ) {
 		std::cout << "overflow ==> " << this->toInt() << " minus " ;
 		std::cout << other.toInt() << " does not fit in Fixed Class" << std::endl;
 		return this->toFloat();
@@ -137,10 +137,10 @@ bool Fixed::operator<(const Fixed & other){
 	return (this->toFloat() < other.toFloat());
 }
 bool Fixed::operator>=(const Fixed & other){
-	return ((this->toFloat() > other.toFloat()) || ((Fixed::_EPSILON_MINUS <= (this->toFloat() - other.toFloat())) && ((this->toFloat() > other.toFloat()) <= Fixed::_EPSILON_PLUS)));
+	return ((this->toFloat() > other.toFloat()) || ((Fixed::_EPSILON_MINUS <= (this->toFloat() - other.toFloat())) && ((this->toFloat() - other.toFloat()) <= Fixed::_EPSILON_PLUS)));
 }
 bool Fixed::operator<=(const Fixed & other){
-	return ((this->toFloat() < other.toFloat()) || ((Fixed::_EPSILON_MINUS <= (this->toFloat() - other.toFloat())) && ((this->toFloat() > other.toFloat()) <= Fixed::_EPSILON_PLUS)));
+	return ((this->toFloat() < other.toFloat()) || ((Fixed::_EPSILON_MINUS <= (this->toFloat() - other.toFloat())) && ((this->toFloat() - other.toFloat()) <= Fixed::_EPSILON_PLUS)));
 }
 
 bool Fixed::operator==(const Fixed & other){
@@ -151,25 +151,33 @@ bool Fixed::operator!=(const Fixed & other){
 	return ((( (this->toFloat() - other.toFloat()) < Fixed::_EPSILON_MINUS ) || ( Fixed::_EPSILON_PLUS < (this->toFloat() > other.toFloat()))));
 }
 
-// increment-decrement operators
+// PRE increment-decrement operators
 Fixed & Fixed::operator++( void ){
-
-	return *this;
-}
-
-Fixed   Fixed::operator++( int n ){
-	++n;
+	//std::cout << " PRE ++increment ";
+	this->setRawBits(static_cast<int>(roundf((this->toFloat() + 0.00390625f) * (1 <<  _fracbits) )));
 	return *this;
 }
 
 Fixed & Fixed::operator--( void ){
-
+	//std::cout << " PRE --decrement ";
+	this->setRawBits(static_cast<int>(roundf((this->toFloat() - 0.00390625f) * (1 <<  _fracbits) )));
 	return *this;
 }
+// POST increment-decrement operators
+Fixed   Fixed::operator++( int n ){
+	//std::cout << " POST  increment++ ";
+	Fixed old = *this;
+	if (n == 0) {operator++();}
+	return old;
+}
+
+
 
 Fixed   Fixed::operator--( int n ){
-	--n;
-	return *this;
+	//std::cout << " POST decrement-- ";
+	Fixed old = *this;
+	if (n == 0) {operator--();}
+	return old;
 }
 
 // member functions
@@ -223,4 +231,5 @@ std::ostream& operator<<(std::ostream& os, const Fixed& obj)
 	os <<  obj.toFloat();
 	return os;
 };
+
 
