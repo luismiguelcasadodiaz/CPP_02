@@ -32,18 +32,18 @@ public:
 	void setRawBits( int const raw );
 
     // aritmetic operators
-    Fixed  operator+(const Fixed & other);
-    Fixed  operator-(const Fixed & other);
-    Fixed  operator*(const Fixed & other);
-    Fixed  operator/(const Fixed & other);
+    Fixed  operator+(const Fixed & other) const;
+    Fixed  operator-(const Fixed & other) const;
+    Fixed  operator*(const Fixed & other) const;
+    Fixed  operator/(const Fixed & other) const;
     
     // Comparison operators
-    bool  operator>(const Fixed & other);
-    bool  operator<(const Fixed & other);
-    bool  operator>=(const Fixed & other);
-    bool  operator<=(const Fixed & other);
-    bool  operator==(const Fixed & other);
-    bool  operator!=(const Fixed & other);
+    bool  operator>(const Fixed & other) const;
+    bool  operator<(const Fixed & other) const;
+    bool  operator>=(const Fixed & other) const;
+    bool  operator<=(const Fixed & other) const;
+    bool  operator==(const Fixed & other) const;
+    bool  operator!=(const Fixed & other) const;
 
 	// PRE increment-decrement operators
 	Fixed & operator++( void );
@@ -59,10 +59,10 @@ public:
 
 	// class functions
     
-	static Fixed min(Fixed & a, Fixed & b);
-	static Fixed min(Fixed const & a, Fixed const & b);
+	static Fixed min(Fixed & a, Fixed & b) ;
+	static Fixed min(Fixed const & a, Fixed const & b) ;
 	static Fixed max(Fixed & a, Fixed & b);
-	static Fixed max(Fixed const & a, Fixed const & b);
+	static Fixed max(Fixed const & a, Fixed const & b) ;
 
 
 private:
