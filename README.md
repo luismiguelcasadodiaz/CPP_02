@@ -373,6 +373,33 @@ i got ths results
 
 ```
 
+### Bonus ex03 BSP
+The subject request to create const attributes
+
+```c++
+	Fixed const _x;
+    Fixed const _y;
+
+```
+
+I got a several compilation errors inside constructors and the assigment operator overload.
+
+I solve the problem in the constructors with the initialitation list.
+ 
+Inside the assigment operator instead copy attribute by attribute i instantiate a new object Point and assigned it to this
+
+```c++
+Point &  Point::operator=(const Point & other)
+{
+
+	if (this != &other)
+	{
+		*this = Point(other);
+	}
+	return *this; 
+}
+```
+
 # what I read
 + [Understanding and Using Floating Point Numbers](https://www.cprogramming.com/tutorial/floating_point/understanding_floating_point.html)
 + [Floating point number representation](https://www.cprogramming.com/tutorial/floating_point/understanding_floating_point_representation.html)
