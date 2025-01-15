@@ -13,6 +13,7 @@ Fixed::Fixed( void ) //constructor by default
 {
 	std::cout << "Default constructor called for Fixed " << std::endl;
 	this->_N = 0;
+	this->_i_am_int = true;
 }
 
 Fixed::Fixed(const Fixed& other) //constructor by copy
@@ -27,6 +28,7 @@ Fixed &  Fixed::operator=(const Fixed & other)
 	if (this != &other)
 	{
 		this->_N = other.getRawBits();
+		this->_i_am_int = other.am_i_int();
 	}
 	return (*this); 
 }
@@ -44,20 +46,24 @@ Fixed::Fixed( int const n ) //constructor for integer
 	if (Fixed::_MIN_INT_FIXED <= n && n <= Fixed::_MAX_INT_FIXED)
 		this->_N = (n << Fixed::_fracbits);
 	else {
-		std::cout << ">>>>>Overflow: "<< n << " is not in Fixed class range. Object created with value 0." << std::endl;
+		std::cout << ">>>>>Overflow: "<< n << " is not in Fixed class range.";
+		std::cout << "Object created with value 0." << std::endl;
 		this->_N = 0;
 	}
+	this->_i_am_int = true;
 }
 
-Fixed::Fixed( const float value ) //constructor for float
+Fixed::Fixed( const float f ) //constructor for float
 {
 	std::cout << "Float constructor called for Fixed " << std::endl;
 	if (Fixed::_MIN_FLT_FIXED <= f && f <= Fixed::_MAX_FLT_FIXED)
 		this->_N = static_cast<int>(roundf(f * (1 <<  _fracbits)));
 	else {
-		std::cout << ">>>>>Overflow: "<< f << " is not in Fixed class range. Object created with value 0." << std::endl;
+		std::cout << ">>>>>Overflow: "<< f << " is not in Fixed class range. ";
+		std::cout << "Object created with value 0." << std::endl;
 		this->_N = 0;
 	}
+	this->_i_am_int = false;
 }
 //Fixed::Fixed(${ARGS_LIST});
 
@@ -65,6 +71,10 @@ Fixed::Fixed( const float value ) //constructor for float
 int Fixed::getRawBits( void ) const
 {
 	return this->_N;
+}
+
+bool Fixed::am_i_int() const{
+	return (this->_i_am_int);
 }
 
 // Setters
@@ -92,7 +102,10 @@ float Fixed::toFloat( void ) const
 
 std::ostream& operator<<(std::ostream& os, const Fixed& obj)
 {
-	os <<  obj.toFloat();
+	if (obj.am_i_int())
+		os <<  obj.toInt();
+	else
+		os << obj.toFloat();
 	return os;
 };
 
