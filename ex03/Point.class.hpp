@@ -13,6 +13,7 @@ public:
     Point( float const x, float const y  ); //parametric constructor by default
     Fixed getx() const;
     Fixed gety() const;
+    bool  operator==(const Point & other) const;
 private:
 	Fixed const _x;
     Fixed const _y;

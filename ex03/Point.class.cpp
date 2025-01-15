@@ -36,6 +36,9 @@ Fixed Point::gety() const{
 	return this->_y;
 }
 
+bool Point::operator==(const Point & other) const {
+	return ((this->getx() == other.getx()) && (this->gety() == other.gety()));
+}
 // Helper functions for canonicalization
 
 std::ostream& operator<<(std::ostream& os, const Point& obj)

@@ -56,6 +56,7 @@ public:
     // member functions
 	float toFloat ( void ) const;
 	int	toInt( void ) const;
+    bool am_i_int() const;
 
 	// class functions
     
@@ -67,6 +68,7 @@ public:
 
 private:
 	int _N;
+    bool _i_am_int;
 	static const int _fracbits;
     static const int _MIN_INT_FIXED;
     static const int _MAX_INT_FIXED;

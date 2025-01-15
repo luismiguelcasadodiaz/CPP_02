@@ -24,6 +24,7 @@ int main( void)
     Point ccc = Point( 3.0f, 5.0f );
     Point yes = Point( 3.0f, 3.0f );
     Point noo = Point( 5.0f, 5.0f );
+    Point lim = Point( 3.0f, 5.0f );
 
     std::cout << "Does the triangle made of the point aaa=" << aaa;
     std::cout << " , the point bbb=" << bbb;
@@ -35,4 +36,10 @@ int main( void)
     std::cout << " and the point ccc=" << ccc;
     std::cout << " contains the point xxx=" << noo << "?";
     std::cout << (bsp(aaa, bbb, ccc, noo) ? "YES" : "NO") << std::endl;
+    std::cout << "Does the triangle made of the point aaa=" << aaa;
+    std::cout << " , the point bbb=" << bbb;
+    std::cout << " and the point ccc=" << ccc;
+    std::cout << " contains the point xxx=" << lim << "?";
+    std::cout << (bsp(aaa, bbb, ccc, lim) ? "YES" : "NO") << std::endl;
+
 }
