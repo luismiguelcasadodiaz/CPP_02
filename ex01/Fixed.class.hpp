@@ -45,6 +45,8 @@ private:
     static const int _MAX_INT_FIXED;
     static const float _MIN_FLT_FIXED;
     static const float _MAX_FLT_FIXED;
+    static const float _EPSILON_PLUS;
+    static const float _EPSILON_MINUS;
 
 
     // Helper functions for canonicalization

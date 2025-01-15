@@ -5,21 +5,20 @@ const int Fixed::_MIN_INT_FIXED = -8388607;
 const int Fixed::_MAX_INT_FIXED = 8388607;
 const float Fixed::_MIN_FLT_FIXED = -8388607.99609375f;
 const float Fixed::_MAX_FLT_FIXED = 8388607.99609375f;
-
+const float Fixed::_EPSILON_PLUS =   0.00390625f;
+const float Fixed::_EPSILON_MINUS = -0.00390625f;
 
 
 Fixed::Fixed( void ) //constructor by default
 {
 	std::cout << "Default constructor called for Fixed " << std::endl;
-	this->setRawBits( 0 );
-	return ;
+	this->_N = 0;
 }
 
 Fixed::Fixed(const Fixed& other) //constructor by copy
 {
 	std::cout << "Copy constructor called for Fixed " << std::endl;
 	*this = other;
-	return;
 }
 
 Fixed &  Fixed::operator=(const Fixed & other)
@@ -42,13 +41,23 @@ Fixed::~Fixed( void ) // destructor
 Fixed::Fixed( int const n ) //constructor for integer
 {
 	std::cout << "Int constructor called for Fixed " << std::endl;
-	this->setRawBits(n << Fixed::_fracbits);
+	if (Fixed::_MIN_INT_FIXED <= n && n <= Fixed::_MAX_INT_FIXED)
+		this->_N = (n << Fixed::_fracbits);
+	else {
+		std::cout << ">>>>>Overflow: "<< n << " is not in Fixed class range. Object created with value 0." << std::endl;
+		this->_N = 0;
+	}
 }
 
 Fixed::Fixed( const float value ) //constructor for float
 {
 	std::cout << "Float constructor called for Fixed " << std::endl;
-	this->setRawBits(static_cast<int>(roundf(value * (1 <<  _fracbits))));
+	if (Fixed::_MIN_FLT_FIXED <= f && f <= Fixed::_MAX_FLT_FIXED)
+		this->_N = static_cast<int>(roundf(f * (1 <<  _fracbits)));
+	else {
+		std::cout << ">>>>>Overflow: "<< f << " is not in Fixed class range. Object created with value 0." << std::endl;
+		this->_N = 0;
+	}
 }
 //Fixed::Fixed(${ARGS_LIST});
 
@@ -61,26 +70,21 @@ int Fixed::getRawBits( void ) const
 // Setters
 void Fixed::setRawBits( int const raw)
 {
-	if (Fixed::_MIN_INT_FIXED <= raw && raw <= Fixed::_MAX_INT_FIXED)
-		this->_N = raw;
-	else {
-		std::cout << ">>>>>Overflow: "<< raw << " is not in Fixed class range" << std::endl;
-		this->_N = 0;
-	}
-	return ;
+	this->_N = raw;
 }
 
+// aritmetic operators
 // Comparison operators
-
+// PRE increment-decrement operators
 // member functions
 int Fixed::toInt( void ) const
 {
-	return (this->getRawBits() >> Fixed::_fracbits);
+	return (this->_N >> Fixed::_fracbits);
 }
 
 float Fixed::toFloat( void ) const
 {
-	return ((float)this->getRawBits() / (1 << Fixed::_fracbits));
+	return ((float)this->_N/ (1 << Fixed::_fracbits));
 }
 
 

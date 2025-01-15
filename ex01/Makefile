@@ -41,11 +41,11 @@ REQUIRED_DIRS	= $(OBJDIR)
 #                               COMPILER SETUP                                 #
 # ============================================================================ #
 CC 				= c++ -std=c++98
-WRNFL			= -Wall -Wextra -Werror -Wconversion -Wdouble-promotion #-fsanitize=address
+WRNFL			= -Wall -Wextra -Werror -Wconversion -Wdouble-promotion -fsanitize=address
 DBGFL			= -g3  -pg
 CFLGS			= $(DBGFL) $(WRNFL) -c 
 #HEADS			= -I$(INCDIR)
-LFLGS 			= #-fsanitize=address
+LFLGS 			= -fsanitize=address
 
 
 SRCS_TARGET	= 	main.cpp \
@@ -89,7 +89,7 @@ $(TARGET): Makefile  $(OBJS_TARGET)
 	$(CC) $(LFLGS) $(OBJS_TARGET) -o $@ $(LLIBS) $(FRAMEWORKS)
 
 # .......................... objects construction ............................ #
-$(OBJDIR)%.o: $(SRCDIR_TARGET)%.cpp 
+$(OBJDIR)%.o: $(SRCDIR_TARGET)%.cpp $(SRCDIR_TARGET)%.hpp
 	@echo "$(GREEN)========== COMPILING MINIRT FILES ===============$(DEF_COLOR)"
 	$(CC) $(CFLGS) $< -o $@   
 
