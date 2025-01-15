@@ -312,6 +312,9 @@ cast to int to fit the setter signature.
 	this->setRawBits(static_cast<int>(roundf(value * (1 <<  _fracbits))i));
 
 ```
+
+Each constructor activates to true or false the flag attribute _i_am_int accordingly. I will use this flag to correctlry display the valut in the ofstream.
+
 #### Recovering the values
 In the opposite way, to translate the class's internal representation to an integer it is a straight 8 bits *right* shift.
 
@@ -399,6 +402,23 @@ Point &  Point::operator=(const Point & other)
 	return *this; 
 }
 ```
+
+Take care of returning false when the point fits in the triangle's border. I check only if d poitns equals any triangle 's point.
+
+
+```c++
+if ( a == d || b == d || c == d)
+        return (false);
+```
+That forced me to overload operator== into class Point like this
+
+```c++
+bool Point::operator==(const Point & other) const {
+	return ((this->getx() == other.getx()) && (this->gety() == other.gety()));
+}
+
+```
+
 
 # what I read
 + [Understanding and Using Floating Point Numbers](https://www.cprogramming.com/tutorial/floating_point/understanding_floating_point.html)
