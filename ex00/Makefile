@@ -34,6 +34,7 @@ DARK_YELLOW		=	\033[38;5;143m
 # ============================================================================ #
 
 TARGET			= main
+SRCDIR			= ./
 OBJDIR 			= ./obj/
 
 REQUIRED_DIRS	= $(OBJDIR)
@@ -41,13 +42,13 @@ REQUIRED_DIRS	= $(OBJDIR)
 #                               COMPILER SETUP                                 #
 # ============================================================================ #
 CC 				= c++ -std=c++98
-WRNFL			= -Wall -Wextra -Werror -Wconversion -Wdouble-promotion #-fsanitize=address
+WRNFL			= -Wall -Wextra -Werror -Wconversion -Wdouble-promotion -fsanitize=address
 DBGFL			= -g3  -pg
 CFLGS			= $(DBGFL) $(WRNFL) -c 
 #HEADS			= -I$(INCDIR)
-LFLGS 			= #-fsanitize=address
+LFLGS 			= -fsanitize=address
 
-
+HEADERS		=	Fixed.class.hpp
 SRCS_TARGET	= 	main.cpp \
 				Fixed.class.cpp
 
@@ -84,7 +85,7 @@ makedirs:
     rm -f $@.$$$$
 
 # .......................... targets construction ............................ #
-$(TARGET): Makefile  $(OBJS_TARGET)
+$(TARGET): Makefile  $(OBJS_TARGET) $(HEADERS)
 	@echo "$(GREEN)========== GATHERING MINIRT OBJECTS =============$(DEF_COLOR)"
 	$(CC) $(LFLGS) $(OBJS_TARGET) -o $@ $(LLIBS) $(FRAMEWORKS)
 

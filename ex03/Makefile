@@ -34,6 +34,7 @@ DARK_YELLOW		=	\033[38;5;143m
 # ============================================================================ #
 
 TARGET			= main
+SRCDIR			= ./
 OBJDIR 			= ./obj/
 
 REQUIRED_DIRS	= $(OBJDIR)
@@ -41,13 +42,14 @@ REQUIRED_DIRS	= $(OBJDIR)
 #                               COMPILER SETUP                                 #
 # ============================================================================ #
 CC 				= c++ -std=c++98
-WRNFL			= -Wall -Wextra -Werror -Wconversion -Wdouble-promotion #-fsanitize=address
+WRNFL			= -Wall -Wextra -Werror -Wconversion -Wdouble-promotion -fsanitize=address
 DBGFL			= -g3  -pg
 CFLGS			= $(DBGFL) $(WRNFL) -c 
 #HEADS			= -I$(INCDIR)
-LFLGS 			= #-fsanitize=address
+LFLGS 			= -fsanitize=address
 
-
+HEADERS		=	Fixed.class.hpp \
+				Point.class.hpp
 SRCS_TARGET	= 	main.cpp \
 				bsp.cpp \
 				Fixed.class.cpp \
@@ -86,13 +88,13 @@ makedirs:
     rm -f $@.$$$$
 
 # .......................... targets construction ............................ #
-$(TARGET): Makefile  $(OBJS_TARGET)
-	@echo "$(GREEN)========== GATHERING MINIRT OBJECTS =============$(DEF_COLOR)"
+$(TARGET): Makefile  $(OBJS_TARGET) $(HEADERS)
+	@echo "$(GREEN)========== GATHERING $(TARGET) OBJECTS =============$(DEF_COLOR)"
 	$(CC) $(LFLGS) $(OBJS_TARGET) -o $@ $(LLIBS) $(FRAMEWORKS)
 
 # .......................... objects construction ............................ #
 $(OBJDIR)%.o: $(SRCDIR_TARGET)%.cpp 
-	@echo "$(GREEN)========== COMPILING MINIRT FILES ===============$(DEF_COLOR)"
+	@echo "$(GREEN)========== COMPILING $(TARGET) FILES ===============$(DEF_COLOR)"
 	$(CC) $(CFLGS) $< -o $@   
 
 $(NAME): $(OBJ)

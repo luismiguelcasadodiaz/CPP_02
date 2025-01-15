@@ -34,6 +34,7 @@ DARK_YELLOW		=	\033[38;5;143m
 # ============================================================================ #
 
 TARGET			= main
+SRCDIR			= ./
 OBJDIR 			= ./obj/
 
 REQUIRED_DIRS	= $(OBJDIR)
@@ -47,7 +48,7 @@ CFLGS			= $(DBGFL) $(WRNFL) -c
 #HEADS			= -I$(INCDIR)
 LFLGS 			= -fsanitize=address
 
-
+HEADERS		=	Fixed.class.hpp
 SRCS_TARGET	= 	main.cpp \
 				Fixed.class.cpp
 
@@ -84,12 +85,12 @@ makedirs:
     rm -f $@.$$$$
 
 # .......................... targets construction ............................ #
-$(TARGET): Makefile  $(OBJS_TARGET)
+$(TARGET): Makefile  $(OBJS_TARGET) $(HEADERS)
 	@echo "$(GREEN)========== GATHERING MINIRT OBJECTS =============$(DEF_COLOR)"
 	$(CC) $(LFLGS) $(OBJS_TARGET) -o $@ $(LLIBS) $(FRAMEWORKS)
 
 # .......................... objects construction ............................ #
-$(OBJDIR)%.o: $(SRCDIR_TARGET)%.cpp $(SRCDIR_TARGET)%.hpp
+$(OBJDIR)%.o: $(SRCDIR_TARGET)%.cpp 
 	@echo "$(GREEN)========== COMPILING MINIRT FILES ===============$(DEF_COLOR)"
 	$(CC) $(CFLGS) $< -o $@   
 
