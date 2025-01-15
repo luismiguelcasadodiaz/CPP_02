@@ -13,6 +13,7 @@ Fixed::Fixed( void ) //constructor by default
 {
 	std::cout << "Default constructor called for Fixed " << std::endl;
 	this->_N = 0;
+	this->_i_am_int = true;
 }
 
 Fixed::Fixed(const Fixed& other) //constructor by copy
@@ -27,8 +28,9 @@ Fixed &  Fixed::operator=(const Fixed & other)
 	if (this != &other)
 	{
 		this->_N= other.getRawBits();
+		this->_i_am_int = other.am_i_int();
 	}
-	return *this; 
+	return (*this); 
 }
 
 Fixed::~Fixed( void ) // destructor
@@ -47,6 +49,7 @@ Fixed::Fixed( int const n ) //constructor for integer
 		std::cout << ">>>>>Overflow: "<< n << " is not in Fixed class range. Object created with value 0." << std::endl;
 		this->_N = 0;
 	}
+	this->_i_am_int = true;
 }
 
 Fixed::Fixed( float const f ) //constructor for float
@@ -58,6 +61,7 @@ Fixed::Fixed( float const f ) //constructor for float
 		std::cout << ">>>>>Overflow: "<< f << " is not in Fixed class range. Object created with value 0." << std::endl;
 		this->_N = 0;
 	}
+	this->_i_am_int = false;
 }
 //Fixed::Fixed(${ARGS_LIST});
 
@@ -65,6 +69,10 @@ Fixed::Fixed( float const f ) //constructor for float
 int Fixed::getRawBits( void ) const
 {
 	return this->_N;
+}
+
+bool Fixed::am_i_int() const{
+	return (this->_i_am_int);
 }
 
 // Setters
@@ -152,12 +160,14 @@ bool Fixed::operator!=(const Fixed & other) const {
 Fixed & Fixed::operator++( void ){
 	//std::cout << " PRE ++increment ";
 	this->setRawBits(static_cast<int>(roundf((this->toFloat() + Fixed::_EPSILON_PLUS) * (1 <<  _fracbits) )));
+	this->_i_am_int =false;
 	return *this;
 }
 
 Fixed & Fixed::operator--( void ){
 	//std::cout << " PRE --decrement ";
 	this->setRawBits(static_cast<int>(roundf((this->toFloat() + Fixed::_EPSILON_MINUS) * (1 <<  _fracbits) )));
+	this->_i_am_int =false;
 	return *this;
 }
 // POST increment-decrement operators
@@ -223,7 +233,10 @@ float Fixed::_abs(const float value) const{
 
 std::ostream& operator<<(std::ostream& os, const Fixed& obj)
 {
-	os <<  obj.toFloat();
+	if (obj.am_i_int())
+		os <<  obj.toInt();
+	else
+		os << obj.toFloat();
 	return os;
 };
 
