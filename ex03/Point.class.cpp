@@ -9,10 +9,8 @@ Point::Point(float const x, float const y ): _x(x), _y(y)//parametric constructo
 {
 }
 
-Point::Point(const Point& other) //constructor by copy
+Point::Point(const Point& other) :_x(other._x), _y(other._y)//constructor by copy
 {
-	this->_x= other._x;
-	this->_y = other._y;
 }
 
 Point &  Point::operator=(const Point & other)
@@ -20,8 +18,7 @@ Point &  Point::operator=(const Point & other)
 
 	if (this != &other)
 	{
-		this->_x = other._x;
-		this->_y = other._y;
+		*this = Point(other);
 	}
 	return *this; 
 }
