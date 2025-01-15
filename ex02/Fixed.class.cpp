@@ -9,19 +9,16 @@ const float Fixed::_EPSILON_PLUS =   0.00390625f;
 const float Fixed::_EPSILON_MINUS = -0.00390625f;
 
 
-
 Fixed::Fixed( void ) //constructor by default
 {
 	std::cout << "Default constructor called for Fixed " << std::endl;
-	this->setRawBits( 0 );
-	return ;
+	this->_N = 0;
 }
 
 Fixed::Fixed(const Fixed& other) //constructor by copy
 {
 	//std::cout << "Copy constructor called for Fixed " << std::endl;
 	*this = other;
-	return;
 }
 
 Fixed &  Fixed::operator=(const Fixed & other)
@@ -29,7 +26,7 @@ Fixed &  Fixed::operator=(const Fixed & other)
 	//std::cout << "Copy assignment operator called for Fixed " << std::endl;
 	if (this != &other)
 	{
-		this->setRawBits(other.getRawBits());
+		this->_N= other.getRawBits();
 	}
 	return *this; 
 }
@@ -45,10 +42,10 @@ Fixed::Fixed( int const n ) //constructor for integer
 {
 	//std::cout << "Int constructor called for Fixed " << std::endl;
 	if (Fixed::_MIN_INT_FIXED <= n && n <= Fixed::_MAX_INT_FIXED)
-		this->setRawBits(n << Fixed::_fracbits);
+		this->_N = (n << Fixed::_fracbits);
 	else {
 		std::cout << ">>>>>Overflow: "<< n << " is not in Fixed class range. Object created with value 0." << std::endl;
-		this->setRawBits(0);
+		this->_N = 0;
 	}
 }
 
@@ -56,12 +53,11 @@ Fixed::Fixed( float const f ) //constructor for float
 {
 	//std::cout << "Float constructor called for Fixed " << std::endl;
 	if (Fixed::_MIN_FLT_FIXED <= f && f <= Fixed::_MAX_FLT_FIXED)
-		this->setRawBits(static_cast<int>(roundf(f * (1 <<  _fracbits))));
+		this->_N = static_cast<int>(roundf(f * (1 <<  _fracbits)));
 	else {
 		std::cout << ">>>>>Overflow: "<< f << " is not in Fixed class range. Object created with value 0." << std::endl;
-		this->setRawBits(0);
+		this->_N = 0;
 	}
-
 }
 //Fixed::Fixed(${ARGS_LIST});
 
@@ -172,8 +168,6 @@ Fixed   Fixed::operator++( int n ){
 	return old;
 }
 
-
-
 Fixed   Fixed::operator--( int n ){
 	//std::cout << " POST decrement-- ";
 	Fixed old = *this;
@@ -184,12 +178,12 @@ Fixed   Fixed::operator--( int n ){
 // member functions
 int Fixed::toInt( void ) const
 {
-	return ((int)(roundf((float)this->_N / (1 << this->_fracbits))));
+	return ((int)(roundf((float)this->_N / (1 << Fixed::_fracbits))));
 }
 
 float Fixed::toFloat( void ) const
 {
-	return ((float)this->getRawBits() / (1 << Fixed::_fracbits));
+	return ((float)this->_N / (1 << Fixed::_fracbits));
 }
 
 	// class functions
